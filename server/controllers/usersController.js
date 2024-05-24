@@ -25,8 +25,18 @@ const getUser = async (req, res) => {
     res.json(user);
 }
 
+const getCurrentUser = async (req, res) => {
+    const user = await User.findById(req.userId).exec();
+    console.log('user : ',user)
+    if (!user) {
+        return res.status(204).json({ 'message': `User ID ${req.userId} not found` });
+    }
+    res.json(user);
+}
+
 module.exports = {
     getAllUsers,
     deleteUser,
-    getUser
+    getUser,
+    getCurrentUser
 }
