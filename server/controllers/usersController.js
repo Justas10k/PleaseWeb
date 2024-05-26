@@ -16,27 +16,25 @@ const deleteUser = async (req, res) => {
     res.json(result);
 }
 
-const getUser = async (req, res) => {
-    if (!req?.params?.id) return res.status(400).json({ "message": 'User ID required' });
-    const user = await User.findOne({ _id: req.params.id }).exec();
-    if (!user) {
-        return res.status(204).json({ 'message': `User ID ${req.params.id} not found` });
-    }
-    res.json(user);
-}
 
-const getCurrentUser = async (req, res) => {
-    const user = await User.findById(req.userId).exec();
-    console.log('user : ',user)
-    if (!user) {
-        return res.status(204).json({ 'message': `User ID ${req.userId} not found` });
+
+
+const getUserById = async (req, res) => {
+    const userId = req.params.id;
+    if (!userId) return res.status(400).json({ "message": 'User ID required' });
+    try {
+        const user = await User.findById(userId).exec();
+        if (!user) {
+            return res.status(404).json({ 'message': `User ID ${userId} not found` });
+        }
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ 'message': err.message });
     }
-    res.json(user);
 }
 
 module.exports = {
     getAllUsers,
     deleteUser,
-    getUser,
-    getCurrentUser
+    getUserById
 }
