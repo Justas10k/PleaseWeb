@@ -6,12 +6,14 @@ const verifyRoles = require("../../middleware/verifyRoles");
 const verifyJWT = require("../../middleware/verifyJWT");
 
 // Routes requiring Admin role
-router
-  .route("/")
-  .get(verifyJWT, verifyRoles(ROLES_LIST.Admin), usersController.getAllUsers)
-  .delete(verifyJWT, verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
+router.route("/profile")
+    .get(verifyJWT, usersController.getProfile);
 
+router.route("/")
+    .get(verifyJWT, verifyRoles(ROLES_LIST.Admin), usersController.getAllUsers)
+    .delete(verifyJWT, verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
-router.route("/:id").get(verifyJWT, usersController.getUserById);
+router.route("/:id")
+    .get(verifyJWT, usersController.getUserById);
 
 module.exports = router;

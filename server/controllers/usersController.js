@@ -16,9 +16,6 @@ const deleteUser = async (req, res) => {
     res.json(result);
 }
 
-
-
-
 const getUserById = async (req, res) => {
     const userId = req.params.id;
     if (!userId) return res.status(400).json({ "message": 'User ID required' });
@@ -33,8 +30,21 @@ const getUserById = async (req, res) => {
     }
 }
 
+const getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).exec();
+        if (!user) {
+            return res.status(404).json({ 'message': 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ 'message': err.message });
+    }
+};
+
 module.exports = {
     getAllUsers,
     deleteUser,
-    getUserById
+    getUserById,
+    getProfile
 }

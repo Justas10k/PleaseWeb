@@ -9,45 +9,42 @@ const handleRefreshToken = async (req, res) => {
 
     const foundUser = await User.findOne({ refreshToken }).exec();
 
-    // Detected refresh token reuse!
     if (!foundUser) {
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             async (err, decoded) => {
-                if (err) return res.sendStatus(403); //Forbidden
-                console.log('attempted refresh token reuse!')
+                if (err) return res.sendStatus(403);
                 const hackedUser = await User.findOne({ username: decoded.username }).exec();
-                hackedUser.refreshToken = [];
-                const result = await hackedUser.save();
-                console.log(result);
+                if (hackedUser) {
+                    hackedUser.refreshToken = [];
+                    await hackedUser.save();
+                }
             }
-        )
-        return res.sendStatus(403); //Forbidden
+        );
+        return res.sendStatus(403);
     }
 
     const newRefreshTokenArray = foundUser.refreshToken.filter(rt => rt !== refreshToken);
 
-    // evaluate jwt 
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
             if (err) {
-                console.log('expired refresh token')
                 foundUser.refreshToken = [...newRefreshTokenArray];
-                const result = await foundUser.save();
-                console.log(result);
+                await foundUser.save();
+                return res.sendStatus(403);
             }
-            if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
+            if (foundUser.username !== decoded.username) return res.sendStatus(403);
 
-            // Refresh token was still valid
             const roles = Object.values(foundUser.roles);
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
                         "username": decoded.username,
-                        "roles": roles
+                        "roles": roles,
+                        "userId": foundUser._id
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -59,16 +56,15 @@ const handleRefreshToken = async (req, res) => {
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
             );
-            // Saving refreshToken with current user
-            foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
-            const result = await foundUser.save();
 
-            // Creates Secure Cookie with refresh token
+            foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+            await foundUser.save();
+
             res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-            res.json({ roles, accessToken })
+            res.json({ roles, accessToken });
         }
     );
 }
 
-module.exports = { handleRefreshToken }
+module.exports = { handleRefreshToken };

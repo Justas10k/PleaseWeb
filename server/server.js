@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const { logger } = require('./middleware/logEvents');
@@ -15,6 +14,14 @@ const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
 connectDB();
+
+
+
+
+
+
+
+
 
 // custom middleware logger
 app.use(logger);
