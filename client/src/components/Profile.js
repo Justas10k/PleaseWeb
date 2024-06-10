@@ -40,7 +40,7 @@ const Profile = () => {
             {profile ? (
                 <div>
                     <p><strong>Username:</strong> {profile.username}</p>
-
+                    <p><strong>id:</strong> {profile._id}</p> {/* Displaying the user ID */}
                     {/* Add more profile fields as needed */}
                 </div>
             ) : (

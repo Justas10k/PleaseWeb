@@ -19,7 +19,9 @@ const Home = () => {
             
             <Link to="/Profile">Go to the Profile page</Link>
             <br/>
-            <Link to="/users/:id">Go to the Profile page</Link>
+            <Link to="/posts">Go to the Posts page</Link>
+            <br/>
+            <Link to="/createPost">Go Create Post page</Link>
             <br/>
 
             <Link to="/editor">Go to the Editor page</Link>

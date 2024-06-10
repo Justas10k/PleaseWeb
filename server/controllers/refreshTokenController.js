@@ -39,12 +39,13 @@ const handleRefreshToken = async (req, res) => {
             if (foundUser.username !== decoded.username) return res.sendStatus(403);
 
             const roles = Object.values(foundUser.roles);
+            const userId = foundUser._id.toString(); // Convert MongoDB ObjectId to string
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
                         "username": decoded.username,
                         "roles": roles,
-                        "userId": foundUser._id
+                        "userId": userId
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -52,7 +53,10 @@ const handleRefreshToken = async (req, res) => {
             );
 
             const newRefreshToken = jwt.sign(
-                { "username": foundUser.username },
+                {
+                    "username": foundUser.username,
+                    "userId": userId
+                },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
             );
@@ -62,7 +66,8 @@ const handleRefreshToken = async (req, res) => {
 
             res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-            res.json({ roles, accessToken });
+            // Send authorization roles, access token, and userId to the user
+            res.json({ userId, roles, accessToken });
         }
     );
 }

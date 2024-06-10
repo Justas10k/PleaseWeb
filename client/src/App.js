@@ -1,3 +1,6 @@
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/js/bootstrap.bundle.min';
+
 import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
@@ -14,7 +17,10 @@ import { Routes, Route } from 'react-router-dom';
 
 import Profile from './components/Profile';
 import UserID from './components/UserID';
+import AllPosts from './components/AllPosts';
 
+import Home1 from './Pages/Home1';
+import CreatePost from './components/CreatePost';
 
 const ROLES = {
   'User': 2001,
@@ -38,10 +44,21 @@ function App() {
           <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/" element={<Home />} />
           </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+            <Route path="/home1" element={<Home1 />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+            <Route path="/createPost" element={<CreatePost/>} />
+          </Route>
 
           <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+            <Route path="/posts" element={<AllPosts />} />
+          </Route>
+
            <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/users/:id" element={<UserID />} />
           </Route> 

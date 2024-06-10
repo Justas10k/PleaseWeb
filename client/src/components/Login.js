@@ -3,8 +3,8 @@ import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useInput from '../hooks/useInput';
 import useToggle from '../hooks/useToggle';
-
 import axios from '../api/axios';
+
 const LOGIN_URL = '/auth';
 
 const Login = () => {
@@ -17,18 +17,18 @@ const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, resetUser, userAttribs] = useInput('user', '')
+    const [user, resetUser, userAttribs] = useInput('user', '');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [check, toggleCheck] = useToggle('persist', false);
 
     useEffect(() => {
         userRef.current.focus();
-    }, [])
+    }, []);
 
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd])
+    }, [user, pwd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,8 +41,11 @@ const Login = () => {
                     withCredentials: true
                 }
             );
+            const userId = response?.data?.userId;
+            const roles = response?.data?.roles;
             const accessToken = response?.data?.accessToken;
-            setAuth({ user, accessToken });
+
+            setAuth({ userId, user, roles, accessToken });
             resetUser();
             setPwd('');
             navigate(from, { replace: true });
@@ -58,10 +61,9 @@ const Login = () => {
             }
             errRef.current.focus();
         }
-    }
+    };
 
     return (
-
         <section>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
             <h1>Sign In</h1>
@@ -102,8 +104,7 @@ const Login = () => {
                 </span>
             </p>
         </section>
+    );
+};
 
-    )
-}
-
-export default Login
+export default Login;

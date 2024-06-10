@@ -27,6 +27,7 @@ const UserID = () => {
             {userProfile ? (
                 <div>
                     <p><strong>Username:</strong> {userProfile.username}</p>
+                    <p><strong>id:</strong> {userProfile._id}</p>
                     {/* Add more user details as needed */}
                 </div>
             ) : (
