@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import CommentForm from './CommentForm';
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -45,6 +46,12 @@ const Posts = () => {
         };
     }, [auth?.accessToken, axiosPrivate, navigate, location]);
 
+    const handleAddComment = (postId, newComment) => {
+        setPosts(prevPosts => prevPosts.map(post => 
+            post._id === postId ? { ...post, comments: [...post.comments, newComment] } : post
+        ));
+    };
+
     return (
         <div>
             <h2>Feed</h2>
@@ -54,6 +61,10 @@ const Posts = () => {
                     <div key={post._id} className="post">
                         <h3>{post.username}</h3>
                         <p>{post.description}</p>
+                        {post.comments.map((comment, index) => (
+                            <p key={index} className="comment">{comment.text}</p>
+                        ))}
+                        <CommentForm postId={post._id} onAddComment={handleAddComment} />
                     </div>
                 ))
             ) : (

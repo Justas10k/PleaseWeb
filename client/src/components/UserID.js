@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import UserIDPost from "./UserIDPost";
 
 const UserID = () => {
     const { id } = useParams();
@@ -29,6 +30,7 @@ const UserID = () => {
                     <p><strong>Username:</strong> {userProfile.username}</p>
                     <p><strong>id:</strong> {userProfile._id}</p>
                     {/* Add more user details as needed */}
+                    <UserIDPost/>
                 </div>
             ) : (
                 <p>Loading...</p>
