@@ -17,4 +17,7 @@ router.patch("/:id/like", verifyJWT, postsController.likePost);
 /* ADD COMMENT */
 router.post("/:id/comment", verifyJWT, postsController.addComment);
 
+/* ADD REPLY */
+router.post("/:postId/comment/:commentId/reply", verifyJWT, postsController.addReply);
+
 module.exports = router;

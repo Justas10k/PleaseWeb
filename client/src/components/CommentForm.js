@@ -8,24 +8,36 @@ const CommentForm = ({ postId, onAddComment }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axiosPrivate.post(`/posts/${postId}/comment`, { comment });
+            const response = await axiosPrivate.post(`/posts/${postId}/comment`, {
+                userId: "userId", // replace with actual userId
+                username: "username", // replace with actual username
+                text: comment
+            });
             console.log('Comment added:', response.data);
-            onAddComment(postId, { text: comment, createdAt: new Date() }); // Add the new comment to the state
-            setComment(''); // Clear the comment input after submission
+            onAddComment(postId, {
+                userId: "userId",
+                username: "username",
+                text: comment,
+                createdAt: new Date(),
+                replies: []
+            });
+            setComment('');
         } catch (err) {
             console.error('Error adding comment:', err);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
-            />
-            <button type="submit">Add Comment</button>
-        </form>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    required
+                />
+                <button type="submit">Add Comment</button>
+            </form>
+        </div>
     );
 };
 

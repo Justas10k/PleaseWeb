@@ -13,7 +13,7 @@ html {
 }
 
 body {
-     min-height: 100vh; 
+    min-height: 100vh; 
     background-color: dodgerblue;
 }
 ul, li {
@@ -22,11 +22,20 @@ ul, li {
     list-style: none;
 }
 
+.centered{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+input{
+
+}
+/*
 .App {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
   min-height: 100vh; 
   padding: 1rem 0.5rem;
 }
@@ -147,3 +156,4 @@ li {
     width: 20px;
     margin: 0 5px 2px 2px;
 }
+    */

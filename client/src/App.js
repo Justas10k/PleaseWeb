@@ -1,5 +1,5 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap/dist/js/bootstrap.bundle.min';
+ import 'bootstrap/dist/css/bootstrap.min.css';
+ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import Register from './components/Register';
 import Login from './components/Login';
@@ -21,6 +21,8 @@ import AllPosts from './components/AllPosts';
 
 import Home1 from './Pages/Home1';
 import CreatePost from './components/CreatePost';
+
+import "./index.css";
 
 const ROLES = {
   'User': 2001,
