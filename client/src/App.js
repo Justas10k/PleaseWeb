@@ -22,7 +22,7 @@ import AllPosts from './components/AllPosts';
 import Home1 from './Pages/Home1';
 import CreatePost from './components/CreatePost';
 
-import "./index.css";
+import "./styles/Global.css";
 
 const ROLES = {
   'User': 2001,

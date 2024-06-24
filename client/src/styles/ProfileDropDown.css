@@ -1,0 +1,109 @@
+.profile-dropdown {
+  position: absolute;
+  top: 55px; /* Adjusted for better spacing */
+  right: 0;
+  background: #1d2226; /* Dark background */
+  color: #ffffff; /* White text */
+  width: 300px; /* Adjusted width */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 1000;
+  padding: 10px; /* Added padding */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.profile-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.profile-picture-large {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.profile-details {
+  flex: 1;
+}
+
+.profile-name {
+  font-weight: bold;
+  margin: 0;
+  color: #ffffff; /* White text */
+}
+
+.profile-title {
+  color: #b0b0b0; /* Light grey text */
+  margin: 0;
+}
+
+.view-profile-link {
+  display: grid;
+  width: 100%;
+  background-color: transparent;
+  color: #0073b1;
+  padding: 5px 0;
+  text-align: center;
+  border: 1px solid #0073b1;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.view-profile-link:hover {
+  background-color: #005582;
+  color: #ffffff;
+}
+
+.profile-menu {
+  border-top: 1px solid #373a3d;
+  margin: 7px 0px;
+  padding: 10px;
+}
+
+.profile-menu p {
+  margin: 0 0 5px 0;
+  font-weight: bold;
+  color: #ffffff; /* White text */
+}
+
+.profile-menu a {
+  font-size: 15px;
+  display: block;
+  color: #b0b0b0; /* Light grey text */
+  text-decoration: none;
+  padding: 3px 0;
+}
+
+.profile-menu a:hover {
+  text-decoration: underline;
+  color: #ffffff; /* White text on hover */
+}
+
+.sign-out-button {
+  font-size: 15px;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  color: #b0b0b0; /* Light grey text */
+  text-decoration: none;
+  border-top: 1px solid #373a3d;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.sign-out-button:hover {
+  text-decoration: underline;
+}

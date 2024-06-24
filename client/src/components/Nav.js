@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   IconHome,
   IconNetwork,
@@ -11,6 +11,7 @@ import {
 import '../styles/Nav.css';
 import SearchInput from './SearchInput';
 import logo from '../img/shortlog.png';
+import ProfileDropdown from './ProfileDropDown';
 
 const Nav = () => {
   const navlinks = [
@@ -42,14 +43,22 @@ const Nav = () => {
   ];
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const profileRef = useRef(null);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const [scrolled, setScrolled] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (profileRef.current && !profileRef.current.contains(event.target)) {
+      setIsProfileOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -59,9 +68,11 @@ const Nav = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -74,48 +85,28 @@ const Nav = () => {
           </a>
           <SearchInput />
         </div>
-  
+
         <span className="d-none d-lg-flex centered">
           {navlinks.map((item) => (
             <li key={item.name} className="nav-item">
-              <a href={item.link}>
+              <a className='nav-link' href={item.link}>
                 {item.icon}
                 <span>{item.name}</span>
               </a>
             </li>
           ))}
-          <div className="nav-item profile-item" onClick={toggleProfileMenu}>
-            <img className="profile-picture" src={logo}  alt="Profile" />
-            <a><span className='Me-arrow-container'>Me             <div className="profile-arrow"></div> </span></a>
-{/* Upside-down triangle */}
-            {isProfileOpen && (
-              <div className="profile-dropdown">
-                <div className="profile-info">
-                  <img className="profile-picture-large" src={logo} alt="Profile" />
-                  <div className="profile-details">
-                    <p className="profile-name">Justas Stankevicius</p>
-                    <p className="profile-title">Front-end developer</p>
-                  </div>
-                  <button className="view-profile-btn">View Profile</button>
-                </div>
-                <div className="profile-menu">
-                  <p>Account</p>
-                  <a href="#">Try Premium for €0</a>
-                  <a href="#">Settings & Privacy</a>
-                  <a href="#">Help</a>
-                  <a href="#">Language</a>
-                </div>
-                <div className="profile-menu">
-                  <p>Manage</p>
-                  <a href="#">Posts & Activity</a>
-                  <a href="#">Job Posting Account</a>
-                </div>
-                <a href="#" className="sign-out">Sign Out</a>
-              </div>
-            )}
+          <div className="nav-item profile-item" ref={profileRef} onClick={toggleProfileMenu}>
+            <img className="profile-picture-mini" src={logo} alt="Profile" />
+            <a className='nav-link'>
+              <span className="Me-arrow-container">
+                Me
+                <div className="profile-arrow"></div>
+              </span>
+            </a>
+            <ProfileDropdown isProfileOpen={isProfileOpen} />
           </div>
         </span>
-  
+
         <div className="d-md-block d-lg-none">
           <IconMenu2
             className={`icon nav-icon ${isOpen ? 'open' : ''}`}
@@ -123,7 +114,7 @@ const Nav = () => {
           />
         </div>
       </nav>
-  
+
       <div className="d-lg-none">
         <div className={`mobile-nav ${isOpen ? 'active' : ''}`}>
           <div className="slide-links">
@@ -133,7 +124,6 @@ const Nav = () => {
               height={30}
               onClick={toggleMenu}
             />
-  
             <ul>
               {navlinks.map((item) => (
                 <li key={item.name}>

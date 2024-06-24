@@ -27,9 +27,12 @@ ul, li {
     justify-content: center;
     align-items: center;
 }
-input{
 
-}
+.link {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
 /*
 .App {
   /* display: flex;
