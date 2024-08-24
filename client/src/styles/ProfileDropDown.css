@@ -1,54 +1,54 @@
-.profile-dropdown {
+.profile-dropdown-menu {
   position: absolute;
-  top: 55px; /* Adjusted for better spacing */
+  top: 55px;
   right: 0;
-  background: #1d2226; /* Dark background */
-  color: #ffffff; /* White text */
-  width: 300px; /* Adjusted width */
+  background: #1d2226;
+  color: #ffffff;
+  width: 300px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   z-index: 1000;
-  padding: 10px; /* Added padding */
+  padding: 10px;
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.profile-dropdown.open {
+.profile-dropdown-menu.open {
   opacity: 1;
   transform: translateY(0);
 }
 
-.profile-info {
+.profile-dropdown-info {
   display: flex;
   align-items: center;
   padding: 10px;
 }
 
-.profile-picture-large {
+.profile-dropdown-picture {
   border-radius: 50%;
   width: 50px;
   height: 50px;
   margin-right: 10px;
 }
 
-.profile-details {
+.profile-dropdown-details {
   flex: 1;
 }
 
-.profile-name {
+.profile-dropdown-name {
   font-weight: bold;
   margin: 0;
-  color: #ffffff; /* White text */
+  color: #ffffff;
 }
 
-.profile-title {
-  color: #b0b0b0; /* Light grey text */
+.profile-dropdown-title {
+  color: #b0b0b0;
   margin: 0;
 }
 
-.view-profile-link {
-  display: grid;
+.profile-dropdown-view-profile {
+  display: block;
   width: 100%;
   background-color: transparent;
   color: #0073b1;
@@ -61,49 +61,49 @@
   text-decoration: none;
 }
 
-.view-profile-link:hover {
+.profile-dropdown-view-profile:hover {
   background-color: #005582;
   color: #ffffff;
 }
 
-.profile-menu {
+.profile-dropdown-menu-section {
   border-top: 1px solid #373a3d;
-  margin: 7px 0px;
+  margin: 7px 0;
   padding: 10px;
 }
 
-.profile-menu p {
+.profile-dropdown-menu-section p {
   margin: 0 0 5px 0;
   font-weight: bold;
-  color: #ffffff; /* White text */
+  color: #ffffff;
 }
 
-.profile-menu a {
+.profile-dropdown-menu-section a {
   font-size: 15px;
   display: block;
-  color: #b0b0b0; /* Light grey text */
+  color: #b0b0b0;
   text-decoration: none;
   padding: 3px 0;
 }
 
-.profile-menu a:hover {
+.profile-dropdown-menu-section a:hover {
   text-decoration: underline;
-  color: #ffffff; /* White text on hover */
+  color: #ffffff;
 }
 
-.sign-out-button {
+.profile-dropdown-signout-button {
   font-size: 15px;
   width: 100%;
   border: none;
   padding: 10px;
   text-align: left;
-  color: #b0b0b0; /* Light grey text */
+  color: #b0b0b0;
   text-decoration: none;
   border-top: 1px solid #373a3d;
   background-color: transparent;
   cursor: pointer;
 }
 
-.sign-out-button:hover {
+.profile-dropdown-signout-button:hover {
   text-decoration: underline;
 }
