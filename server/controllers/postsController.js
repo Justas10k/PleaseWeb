@@ -15,10 +15,9 @@ const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const posts = await Post.find();
-    res.status(201).json(posts);
+    res.status(201).json(newPost); // Return the newly created post
   } catch (err) {
-    res.status(409).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -28,7 +27,7 @@ const getFeedPosts = async (req, res) => {
     const posts = await Post.find();
     res.status(200).json(posts);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -38,7 +37,7 @@ const getUserPosts = async (req, res) => {
     const posts = await Post.find({ userId });
     res.status(200).json(posts);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -67,7 +66,7 @@ const likePost = async (req, res) => {
 
     res.status(200).json(updatedPost);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -80,12 +79,50 @@ const addComment = async (req, res) => {
     const post = await Post.findById(id);
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    post.comments.push({ userId, username, text, createdAt: new Date() });
+    const newComment = {
+      userId,
+      username,
+      text,
+      createdAt: new Date(),
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    // Find the latest comment added to ensure it includes its ID
+    const updatedPost = await Post.findById(id);
+    const addedComment = updatedPost.comments[updatedPost.comments.length - 1];
+
+    res.status(200).json(addedComment); // Return the comment including its ID
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const likeComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const { userId } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    const comment = post.comments.id(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    const isLiked = comment.likes.get(userId);
+
+    if (isLiked) {
+      comment.likes.delete(userId);
+    } else {
+      comment.likes.set(userId, true);
+    }
+
     await post.save();
 
     res.status(200).json(post);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -106,7 +143,37 @@ const addReply = async (req, res) => {
 
     res.status(200).json(post);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const likeReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params;
+    const { userId } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    const comment = post.comments.id(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) return res.status(404).json({ message: "Reply not found" });
+
+    const isLiked = reply.likes.get(userId);
+
+    if (isLiked) {
+      reply.likes.delete(userId);
+    } else {
+      reply.likes.set(userId, true);
+    }
+
+    await post.save();
+
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -116,5 +183,7 @@ module.exports = {
   getUserPosts,
   likePost,
   addComment,
+  likeComment,
   addReply,
+  likeReply,
 };

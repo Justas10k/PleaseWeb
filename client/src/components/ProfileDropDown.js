@@ -2,7 +2,6 @@ import '../styles/ProfileDropDown.css';
 import logo from '../img/shortlog.png';
 import { useNavigate, Link } from 'react-router-dom';
 import useLogout from '../hooks/useLogout';
-
 const ProfileDropDown = ({ isProfileOpen }) => {
   const navigate = useNavigate();
   const logout = useLogout();
@@ -24,7 +23,7 @@ const ProfileDropDown = ({ isProfileOpen }) => {
       <div className="profile-dropdown-info">
         <img className="profile-dropdown-picture" src={logo} alt="Profile" />
         <div className="profile-dropdown-details">
-          <p className="profile-dropdown-name">Justas Stankevicius</p>
+          <p className="profile-dropdown-name">jjj jjj</p>
         </div>
       </div>
       <Link className="profile-dropdown-view-profile" to="/Profile">

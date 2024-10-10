@@ -3,16 +3,18 @@
   padding: 80px 2.5% 30px 2.5%;
   width: 100%;
   min-height: 100vh;
-  background-color: #f3f2ef;
+  background-color: #ffe083;
   gap: 10px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .page-left-side{
   width: 20%;
 }
 .page-center-side{
+  display: flex;
+  height: 100%;
   width: 60%;
 }
 .page-right-side{

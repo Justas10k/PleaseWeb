@@ -16,7 +16,8 @@ const Home = () => {
             <br />
             <p>You are logged in!</p>
             <br />
-            
+            <Link to="/home1">Go to the HOME!!!1 page</Link>
+            <br/>
             <Link to="/Profile">Go to the Profile page</Link>
             <br/>
             <Link to="/posts">Go to the Posts page</Link>

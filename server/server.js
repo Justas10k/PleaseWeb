@@ -16,13 +16,6 @@ const PORT = process.env.PORT || 3500;
 connectDB();
 
 
-
-
-
-
-
-
-
 // custom middleware logger
 app.use(logger);
 
@@ -43,6 +36,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //serve static files
+
 
 
 // routes

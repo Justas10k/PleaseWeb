@@ -1,0 +1,53 @@
+.post-feed{
+    background-color: rgb(0, 0, 0);
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.post{
+    background-color: rgb(125, 0, 250);
+}
+.post-mini-profile{
+    background-color: yellow;
+    display: flex;
+    gap: 10px;
+}
+.profile-picture{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.post-username{
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    font-size: 21px;
+}
+.comment {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.comment button {
+    margin-left: 10px;
+    padding: 3px 8px;
+    font-size: 0.8em;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment button:hover {
+    background-color: #e0e0e0;
+}
+
+.replies-toggle {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.reply {
+    margin-left: 40px;
+    margin-top: 10px;
+}
