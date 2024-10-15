@@ -40,10 +40,11 @@ const handleRefreshToken = async (req, res) => {
 
             const roles = Object.values(foundUser.roles);
             const userId = foundUser._id.toString(); // Convert MongoDB ObjectId to string
+            const username = foundUser.username; // Extract username from foundUser
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
-                        "username": decoded.username,
+                        "username": username, // Use the extracted username
                         "roles": roles,
                         "userId": userId
                     }
@@ -67,7 +68,7 @@ const handleRefreshToken = async (req, res) => {
             res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
             // Send authorization roles, access token, and userId to the user
-            res.json({ userId, roles, accessToken });
+            res.json({ userId, user: username, roles, accessToken }); // Include user as username
         }
     );
 }

@@ -11,7 +11,7 @@ const useRefreshToken = () => {
             return {
                 ...prev,
                 userId: response.data.userId,
-                user: response.data.user, // Add the user field here
+                user: response.data.user,
                 roles: response.data.roles,
                 accessToken: response.data.accessToken
             };
