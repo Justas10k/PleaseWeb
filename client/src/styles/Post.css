@@ -1,15 +1,20 @@
 .post-feed{
     background-color: rgb(0, 0, 0);
     gap: 10px;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 .post{
-    background-color: rgb(125, 0, 250);
+    background-color: #1b1e23;
 }
-.post-mini-profile{
+.post-mini-profile-container{
+    padding: 12px 16px 0px 16px;
     background-color: yellow;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
     gap: 10px;
 }
 .profile-picture{
@@ -25,6 +30,7 @@
 .comment {
     margin-left: 20px;
     margin-top: 10px;
+    background-color: red;
 }
 
 .comment button {

@@ -138,10 +138,21 @@ const addReply = async (req, res) => {
     const comment = post.comments.id(commentId);
     if (!comment) return res.status(404).json({ message: "Comment not found" });
 
-    comment.replies.push({ userId, username, text, createdAt: new Date() });
+    const newReply = {
+      userId,
+      username,
+      text,
+      createdAt: new Date(),
+    };
+
+    comment.replies.push(newReply);
     await post.save();
 
-    res.status(200).json(post);
+    // Find the latest reply added to ensure it includes its ID
+    const updatedPost = await Post.findById(postId);
+    const addedReply = updatedPost.comments.id(commentId).replies[updatedPost.comments.id(commentId).replies.length - 1];
+
+    res.status(200).json(addedReply); // Return the reply including its ID
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -30,13 +30,13 @@ const Posts = () => {
                 if (isMounted) {
                     setPosts(response.data.map(post => ({
                         ...post,
-                        likes: post.likes || {}, // Ensure likes is an object
+                        likes: post.likes || {},
                         comments: post.comments.map(comment => ({
                             ...comment,
-                            likes: comment.likes || {}, // Ensure likes is an object for each comment
+                            likes: comment.likes || {},
                             replies: comment.replies.map(reply => ({
                                 ...reply,
-                                likes: reply.likes || {}, // Ensure likes is an object for each reply
+                                likes: reply.likes || {},
                             })),
                         })),
                     })));
@@ -63,12 +63,10 @@ const Posts = () => {
         };
     }, [auth?.accessToken, axiosPrivate, navigate, location]);
 
-    // Add a new post to the feed
     const addPostToFeed = (newPost) => {
         setPosts(prevPosts => [newPost, ...prevPosts]);
     };
 
-    // Add a new comment to a post
     const handleAddComment = (postId, newComment) => {
         console.log(" new COMMMENT ::: postID :",postId, "newComment : ", newComment);
         setPosts(prevPosts =>
@@ -81,8 +79,8 @@ const Posts = () => {
         );
     };
 
-    // Add a new reply to a comment
     const handleAddReply = (postId, commentId, newReply) => {
+        console.log(" new REPLY ::: postID :",postId, "commentID : ", commentId, "newReply : ", newReply);
         setPosts(prevPosts =>
             prevPosts.map(post =>
                 post._id === postId ? {
@@ -185,14 +183,14 @@ const Posts = () => {
     return (
         <div className='post-feed'>
             <h2>Feed</h2>
-            <CreatePost addPostToFeed={addPostToFeed} /> {/* Include CreatePost component */}
+            <CreatePost addPostToFeed={addPostToFeed} />
             {error && <p className="error">{error}</p>}
             {posts.length > 0 ? (
                 posts.map((post) => (
                     <div key={post._id} className="post">
-                        <div className='post-mini-profile'><img src={profilepicture} className='profile-picture' alt='
+                        <div className='post-mini-profile-container'><img src={profilepicture} className='profile-picture' alt='
                         '/><h3 className='post-username'>{post.username}</h3></div>
-                        <p>{post.description}</p>
+                        <p>{post.description}</p>x
                         <button onClick={() => handleLikePost(post._id)}>
                             {post.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(post.likes || {}).length})
                         </button>
