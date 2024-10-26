@@ -180,6 +180,52 @@ const Posts = () => {
         }));
     };
 
+    const handleDeletePost = async (postId) => {
+        try {
+            await axiosPrivate.delete(`/posts/${postId}`);
+            setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
+        } catch (err) {
+            console.error('Error deleting post:', err);
+        }
+    };
+
+    const handleDeleteComment = async (postId, commentId) => {
+        try {
+            await axiosPrivate.delete(`/posts/${postId}/comment/${commentId}`);
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post._id === postId ? {
+                        ...post,
+                        comments: post.comments.filter(comment => comment._id !== commentId)
+                    } : post
+                )
+            );
+        } catch (err) {
+            console.error('Error deleting comment:', err);
+        }
+    };
+
+    const handleDeleteReply = async (postId, commentId, replyId) => {
+        try {
+            await axiosPrivate.delete(`/posts/${postId}/comment/${commentId}/reply/${replyId}`);
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post._id === postId ? {
+                        ...post,
+                        comments: post.comments.map(comment =>
+                            comment._id === commentId ? {
+                                ...comment,
+                                replies: comment.replies.filter(reply => reply._id !== replyId)
+                            } : comment
+                        )
+                    } : post
+                )
+            );
+        } catch (err) {
+            console.error('Error deleting reply:', err);
+        }
+    };
+
     return (
         <div className='post-feed'>
             <h2>Feed</h2>
@@ -212,12 +258,21 @@ const Posts = () => {
                                         <button onClick={() => handleLikeReply(post._id, comment._id, reply._id)}>
                                             {reply.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(reply.likes || {}).length})
                                         </button>
+                                        {reply.userId === auth.userId && (
+                                            <button onClick={() => handleDeleteReply(post._id, comment._id, reply._id)}>Delete Reply</button>
+                                        )}
                                     </div>
                                 ))}
+                                {comment.userId === auth.userId && (
+                                    <button onClick={() => handleDeleteComment(post._id, comment._id)}>Delete Comment</button>
+                                )}
                                 <ReplyForm postId={post._id} commentId={comment._id} onAddReply={handleAddReply} />
                             </div>
                         ))}
                         <CommentForm postId={post._id} onAddComment={handleAddComment} />
+                        {post.userId === auth.userId && (
+                            <button onClick={() => handleDeletePost(post._id)}>Delete Post</button>
+                        )}
                     </div>
                 ))
             ) : (

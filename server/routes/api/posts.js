@@ -25,4 +25,9 @@ router.post("/:postId/comment/:commentId/reply", verifyJWT, postsController.addR
 
 router.patch("/:postId/comment/:commentId/reply/:replyId/like", verifyJWT, postsController.likeReply);
 
+/* DELETE */
+router.delete("/:id", verifyJWT, postsController.deletePost); // Delete post
+router.delete("/:postId/comment/:commentId", verifyJWT, postsController.deleteComment); // Delete comment
+router.delete("/:postId/comment/:commentId/reply/:replyId", verifyJWT, postsController.deleteReply); // Delete reply
+
 module.exports = router;

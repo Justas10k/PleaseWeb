@@ -33,7 +33,7 @@
     background-color: red;
 }
 
-.comment button {
+.comment button, .reply button {
     margin-left: 10px;
     padding: 3px 8px;
     font-size: 0.8em;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.comment button:hover {
+.comment button:hover, .reply button:hover {
     background-color: #e0e0e0;
 }
 
