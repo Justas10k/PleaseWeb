@@ -15,41 +15,28 @@ const PORT = process.env.PORT || 3500;
 // Connect to MongoDB
 connectDB();
 
-
-// custom middleware logger
+// Middleware
 app.use(logger);
-
-// Handle options credentials check - before CORS!
-// and fetch cookies credentials requirement
 app.use(credentials);
-
-// Cross Origin Resource Sharing
 app.use(cors(corsOptions));
-
-// built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
-
-// built-in middleware for json 
 app.use(express.json());
-
-//middleware for cookies
 app.use(cookieParser());
 
-//serve static files
+// Routes
 
 
-
-// routes
-
+app.use('/api', require('./routes/api/images'));
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
-
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users'));
 app.use('/posts', require('./routes/api/posts'));
+
+// Use the image routes
 
 
 app.use(errorHandler);

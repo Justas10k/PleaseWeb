@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
+import UploadImage from "./uploadImage";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -50,6 +51,7 @@ const Profile = () => {
             <div className="flexGrow">
                 <Link to="/">Home</Link>
             </div>
+            <UploadImage/>
         </section>
     );
 };
