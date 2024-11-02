@@ -36,6 +36,28 @@ p{
   }
 
 
+.show-images-picture{
+    width: 300px;
+    height: 300px;
+}
+
+
+.show-images-picture-delete {
+    margin-top: 5px;
+    padding: 25px 10px;
+    background-color: #ff4d4d; /* Red color for delete button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.show-images-picture button:hover {
+    background-color: #ff1a1a; /* Darker red on hover */
+}
+
+
+
 /*
 .App {
   /* display: flex;

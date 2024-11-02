@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const imageSchema = new mongoose.Schema({
+const videoSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     name: {
         type: String,
@@ -9,7 +9,7 @@ const imageSchema = new mongoose.Schema({
     caption: {
         type: String,
     },
-    imageUrl: {
+    videoUrl: {
         type: String,
         required: true,
     },
@@ -19,7 +19,7 @@ const imageSchema = new mongoose.Schema({
     },
 });
 
-// Create the Image model
-const Image = mongoose.model('Image', imageSchema);
+// Create the Video model
+const Video = mongoose.model('Video', videoSchema);
 
-module.exports = Image;
+module.exports = Video; 

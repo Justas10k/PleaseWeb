@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import useAxiosPrivate from "../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+import useAuth from '../hooks/useAuth';
 
 const UploadImage = () => {
     const [file, setFile] = useState(null);
     const [caption, setCaption] = useState('');
     const axiosPrivate = useAxiosPrivate(); // Initialize axiosPrivate
+    const { auth } = useAuth();
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -19,6 +21,8 @@ const UploadImage = () => {
         const formData = new FormData();
         formData.append('image', file);
         formData.append('caption', caption);
+        formData.append('userId', auth.userId); // Ensure this is the actual user ID
+        formData.append('username', auth.user); // Ensure this is the actual username
 
         try {
             const response = await axiosPrivate.post('/api/upload', formData, {

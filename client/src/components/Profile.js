@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
 import UploadImage from "./uploadImage";
+import ShowImages from "./ShowImages";
+import UploadVideo from "./UploadVideo";
+import ShowVideos from "./ShowVideos";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -52,6 +55,10 @@ const Profile = () => {
                 <Link to="/">Home</Link>
             </div>
             <UploadImage/>
+            <ShowImages />
+            <h1>VIDEO</h1>
+            <UploadVideo/>
+            <ShowVideos/>
         </section>
     );
 };

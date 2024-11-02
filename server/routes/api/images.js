@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const { handleImageUpload } = require('../../controllers/imagesController');
+const { imageRoutes } = require('../../controllers/imagesController.js');
 
-// Define the image upload route
-router.post('/upload', handleImageUpload);
+const router = express.Router();
+
+imageRoutes(router);
 
 module.exports = router;
