@@ -3,6 +3,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import '../styles/CreatePost.css';
+import ShowProfilePicture from './ShowProfilePicture';
 
 const CreatePost = ({ addPostToFeed }) => {
     const [description, setDescription] = useState('');
@@ -74,6 +75,7 @@ const CreatePost = ({ addPostToFeed }) => {
                 </div>
                 <button type="submit" className="submit-post">Post</button>
             </form>
+            <ShowProfilePicture/>
         </div>
     );
 };

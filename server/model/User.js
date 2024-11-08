@@ -20,6 +20,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    profilePicture: {
+        type: String,
+        default: null
+    },
     refreshToken: [String]
 });
 

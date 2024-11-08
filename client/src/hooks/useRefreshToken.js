@@ -13,7 +13,7 @@ const useRefreshToken = () => {
                 userId: response.data.userId,
                 user: response.data.user,
                 roles: response.data.roles,
-                accessToken: response.data.accessToken
+                accessToken: response.data.accessToken,
             };
         });
         return response.data.accessToken;

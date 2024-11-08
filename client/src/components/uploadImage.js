@@ -25,7 +25,7 @@ const UploadImage = () => {
         formData.append('username', auth.user); // Ensure this is the actual username
 
         try {
-            const response = await axiosPrivate.post('/api/upload', formData, {
+            const response = await axiosPrivate.post('/images', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', // Set the content type
                 },

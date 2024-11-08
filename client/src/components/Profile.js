@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
-import UploadImage from "./uploadImage";
+import UploadImage from "./UploadImage";
 import ShowImages from "./ShowImages";
 import UploadVideo from "./UploadVideo";
 import ShowVideos from "./ShowVideos";
+import AddProfilePicture from "./AddProfilePicture";
 
 const Profile = () => {
+
     const [profile, setProfile] = useState(null);
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
@@ -54,11 +56,20 @@ const Profile = () => {
             <div className="flexGrow">
                 <Link to="/">Home</Link>
             </div>
+            <p>Profile picture : </p>
+            <h1>add a profile picture</h1>
+            <AddProfilePicture/>
+
+            <h1>currect user picture</h1>
+
+
+            <h1>images</h1>
             <UploadImage/>
             <ShowImages />
             <h1>VIDEO</h1>
             <UploadVideo/>
             <ShowVideos/>
+            
         </section>
     );
 };

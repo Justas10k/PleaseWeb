@@ -20,7 +20,7 @@ const UploadVideo = () => {
         formData.append('userId', auth.userId); // Replace with actual user ID
 
         try {
-            const response = await axiosPrivate.post('/api/uploadVideo', formData, {
+            const response = await axiosPrivate.post('/images/uploadVideo', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

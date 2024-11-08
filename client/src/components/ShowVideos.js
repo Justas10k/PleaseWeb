@@ -12,7 +12,7 @@ const ShowVideos = () => {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await axiosPrivate.get('/api/videos'); // Fetch videos from the backend
+                const response = await axiosPrivate.get('/images/videos'); // Fetch videos from the backend
                 setVideos(response.data); // Set the videos in state
             } catch (err) {
                 setError('Error fetching videos');
@@ -27,7 +27,7 @@ const ShowVideos = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axiosPrivate.delete(`/api/videos/${id}`); // Call the delete endpoint
+            await axiosPrivate.delete(`/images/videos/${id}`); // Call the delete endpoint
             setVideos(videos.filter(video => video._id !== id)); // Update state to remove the deleted video
         } catch (err) {
             console.error('Error deleting video:', err);
@@ -48,7 +48,7 @@ const ShowVideos = () => {
         formData.append('video', selectedFile);
 
         try {
-            await axiosPrivate.put(`/api/videos/${id}`, formData, {
+            await axiosPrivate.put(`/images/videos/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

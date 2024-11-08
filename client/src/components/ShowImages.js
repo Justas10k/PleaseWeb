@@ -12,8 +12,9 @@ const ShowImages = () => {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axiosPrivate.get('/api/images'); // Fetch images from the backend
-                setImages(response.data); // Set the images in state
+                const response = await axiosPrivate.get('/images');
+                console.log(response.data)
+                setImages(response.data);
             } catch (err) {
                 setError('Error fetching images');
                 console.error(err);
@@ -27,7 +28,7 @@ const ShowImages = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axiosPrivate.delete(`/api/images/${id}`); // Call the delete endpoint
+            await axiosPrivate.delete(`/images/${id}`); // Call the delete endpoint
             setImages(images.filter(image => image._id !== id)); // Update state to remove the deleted image
         } catch (err) {
             console.error('Error deleting image:', err);
@@ -48,7 +49,7 @@ const ShowImages = () => {
         formData.append('image', selectedFile);
 
         try {
-            await axiosPrivate.put(`/api/images/${id}`, formData, {
+            await axiosPrivate.put(`/images/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
