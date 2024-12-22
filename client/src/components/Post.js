@@ -5,8 +5,8 @@ import useAuth from '../hooks/useAuth';
 import CommentForm from './CommentForm';
 import ReplyForm from './ReplyForm';
 import CreatePost from './CreatePost'; // Import CreatePost component
+import ShowProfilePictureById from './ShowProfilePictureById'; // Import ShowProfilePictureById component
 import '../styles/Post.css';
-import profilepicture from '../img/gimme2.jpg';
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -30,6 +30,7 @@ const Posts = () => {
                 if (isMounted) {
                     setPosts(response.data.map(post => ({
                         ...post,
+                        
                         likes: post.likes || {},
                         comments: post.comments.map(comment => ({
                             ...comment,
@@ -68,7 +69,6 @@ const Posts = () => {
     };
 
     const handleAddComment = (postId, newComment) => {
-        console.log(" new COMMMENT ::: postID :",postId, "newComment : ", newComment);
         setPosts(prevPosts =>
             prevPosts.map(post =>
                 post._id === postId ? { 
@@ -80,7 +80,6 @@ const Posts = () => {
     };
 
     const handleAddReply = (postId, commentId, newReply) => {
-        console.log(" new REPLY ::: postID :",postId, "commentID : ", commentId, "newReply : ", newReply);
         setPosts(prevPosts =>
             prevPosts.map(post =>
                 post._id === postId ? {
@@ -232,49 +231,69 @@ const Posts = () => {
             <CreatePost addPostToFeed={addPostToFeed} />
             {error && <p className="error">{error}</p>}
             {posts.length > 0 ? (
-                posts.map((post) => (
-                    <div key={post._id} className="post">
-                        <div className='post-mini-profile-container'><img src={profilepicture} className='profile-picture' alt='
-                        '/><h3 className='post-username'>{post.username}</h3></div>
-                        <p>{post.description}</p>x
-                        <button onClick={() => handleLikePost(post._id)}>
-                            {post.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(post.likes || {}).length})
-                        </button>
-                        <button onClick={() => toggleComments(post._id)}>
-                            {showComments[post._id] ? "Hide Comments" : "Show Comments"}
-                        </button>
-                        {showComments[post._id] && post.comments.map((comment) => (
-                            <div key={comment._id} className="comment">
-                                <strong>{comment.username}</strong>: {comment.text}
-                                <button onClick={() => handleLikeComment(post._id, comment._id)}>
-                                    {comment.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(comment.likes || {}).length})
-                                </button>
-                                <button onClick={() => toggleReplies(comment._id)}>
-                                    {showReplies[comment._id] ? "Hide Replies" : "Show Replies"}
-                                </button>
-                                {showReplies[comment._id] && comment.replies.map((reply) => (
-                                    <div key={reply._id} className="reply">
-                                        <strong>{reply.username}</strong>: {reply.text}
-                                        <button onClick={() => handleLikeReply(post._id, comment._id, reply._id)}>
-                                            {reply.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(reply.likes || {}).length})
-                                        </button>
-                                        {reply.userId === auth.userId && (
-                                            <button onClick={() => handleDeleteReply(post._id, comment._id, reply._id)}>Delete Reply</button>
-                                        )}
-                                    </div>
-                                ))}
-                                {comment.userId === auth.userId && (
-                                    <button onClick={() => handleDeleteComment(post._id, comment._id)}>Delete Comment</button>
-                                )}
-                                <ReplyForm postId={post._id} commentId={comment._id} onAddReply={handleAddReply} />
+                posts.map((post) => {
+                    return (
+                        <div key={post._id} className="post">
+                            <div className='post-mini-profile-container'>
+                                <ShowProfilePictureById userId={post.userId} />
+                                <h3 className='post-username'>{post.username}</h3>
                             </div>
-                        ))}
-                        <CommentForm postId={post._id} onAddComment={handleAddComment} />
-                        {post.userId === auth.userId && (
-                            <button onClick={() => handleDeletePost(post._id)}>Delete Post</button>
-                        )}
-                    </div>
-                ))
+                            <p>{post.description}</p>
+                            {post.media && post.media.map((mediaItem, index) => {
+                                
+                                console.log('MediaItem:', mediaItem);
+                                /*console.log('Media type object:', mediaItem._doc);
+                                console.log('Media type:', mediaItem._doc.type);
+                                console.log('Media URL:', mediaItem.url);*/
+                                return mediaItem._doc.type === 'image' ? (
+                                    <img key={index} src={mediaItem.url} alt={`Post media ${index}`} className="post-image" />
+                                ) : (
+
+                                    <video key={index} controls className="post-video">
+                                        <source src={mediaItem.url} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                );
+                            })}
+                            <button onClick={() => handleLikePost(post._id)}>
+                                {post.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(post.likes || {}).length})
+                            </button>
+                            <button onClick={() => toggleComments(post._id)}>
+                                {showComments[post._id] ? "Hide Comments" : "Show Comments"}
+                            </button>
+                            {showComments[post._id] && post.comments.map((comment) => (
+                                <div key={comment._id} className="comment">
+                                    <strong>{comment.username}</strong>: {comment.text}
+                                    <button onClick={() => handleLikeComment(post._id, comment._id)}>
+                                        {comment.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(comment.likes || {}).length})
+                                    </button>
+                                    <button onClick={() => toggleReplies(comment._id)}>
+                                        {showReplies[comment._id] ? "Hide Replies" : "Show Replies"}
+                                    </button>
+                                    {showReplies[comment._id] && comment.replies.map((reply) => (
+                                        <div key={reply._id} className="reply">
+                                            <strong>{reply.username}</strong>: {reply.text}
+                                            <button onClick={() => handleLikeReply(post._id, comment._id, reply._id)}>
+                                                {reply.likes?.hasOwnProperty(auth.userId) ? "Liked" : "Like"} ({Object.keys(reply.likes || {}).length})
+                                            </button>
+                                            {reply.userId === auth.userId && (
+                                                <button onClick={() => handleDeleteReply(post._id, comment._id, reply._id)}>Delete Reply</button>
+                                            )}
+                                        </div>
+                                    ))}
+                                    {comment.userId === auth.userId && (
+                                        <button onClick={() => handleDeleteComment(post._id, comment._id)}>Delete Comment</button>
+                                    )}
+                                    <ReplyForm postId={post._id} commentId={comment._id} onAddReply={handleAddReply} />
+                                </div>
+                            ))}
+                            <CommentForm postId={post._id} onAddComment={handleAddComment} />
+                            {post.userId === auth.userId && (
+                                <button onClick={() => handleDeletePost(post._id)}>Delete Post</button>
+                            )}
+                        </div>
+                    );
+                })
             ) : (
                 <p>No posts available</p>
             )}

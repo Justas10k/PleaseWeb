@@ -28,6 +28,11 @@ const postSchema = new Schema({
   userId: { type: String, required: true },
   username: { type: String, required: true },
   description: String,
+  media: [{
+    name: { type: String, required: true},
+    type: { type: String, enum: ['image', 'video'], required: true },
+    url: { type: String, required: true }
+  }],
   likes: {
     type: Map,
     of: Boolean,

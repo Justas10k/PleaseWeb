@@ -1,6 +1,61 @@
 const Post = require("../model/Post");
 const User = require("../model/User");
+//image start
+const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const dotenv = require('dotenv');
+const multer = require('multer');
+const sharp = require('sharp');
+const crypto = require('crypto');
 
+dotenv.config();
+
+const bucketName = process.env.BUCKET_NAME;
+const region = process.env.BUCKET_REGION;
+const accessKeyId = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+const s3Client = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey
+  }
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
+
+function uploadFile(fileBuffer, fileName, mimetype) {
+  const uploadParams = {
+    Bucket: bucketName,
+    Body: fileBuffer,
+    Key: fileName,
+    ContentType: mimetype
+  };
+  return s3Client.send(new PutObjectCommand(uploadParams));
+}
+function deleteFile(fileName) {
+  const deleteParams = {
+    Bucket: bucketName,
+    Key: fileName,
+  };
+  return s3Client.send(new DeleteObjectCommand(deleteParams));
+}
+
+async function getObjectSignedUrl(key) {
+  const params = {
+    Bucket: bucketName,
+    Key: key
+  };
+  const command = new GetObjectCommand(params);
+  const seconds = 60;
+  const url = await getSignedUrl(s3Client, command, { expiresIn: seconds });
+  return url;
+}
+//image end
 /* CREATE */
 const createPost = async (req, res) => {
   try {
@@ -8,11 +63,36 @@ const createPost = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    const media = []; // Initialize media array
+
+    // Check if image files are provided
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageName = generateFileName(); // Generate a unique file name for the image
+
+        const fileBuffer = await sharp(file.buffer)
+          .resize({ height: 1920, width: 1080, fit: "contain" })
+          .toBuffer();
+
+        await uploadFile(fileBuffer, imageName, file.mimetype);
+
+        // Add media object to the array
+        media.push({
+          name: imageName,
+          type: file.mimetype.startsWith('image/') ? 'image' : 'video', // Determine type
+          url: `https://${bucketName}.s3.${region}.amazonaws.com/${imageName}`, // Construct the media URL
+        });
+      }
+    }
+
+    // Create the new post object
     const newPost = new Post({
       userId,
       username: user.username,
       description,
+      media, // Add media array to the post
     });
+
     await newPost.save();
 
     res.status(201).json(newPost); // Return the newly created post
@@ -25,7 +105,25 @@ const createPost = async (req, res) => {
 const getFeedPosts = async (req, res) => {
   try {
     const posts = await Post.find();
-    res.status(200).json(posts);
+    const imagesWithUrls = await Promise.all(posts.map(async (post) => {
+      const mediaUrls = await Promise.all(post.media.map(async (mediaItem) => {
+        console.log('before post:', mediaItem.name);
+        const url = await getObjectSignedUrl(mediaItem.name); // Directly use the URL from the media item
+        /*console.log('mediaItem::::', mediaItem);*/
+        console.log('media URL::::', url)
+        return {
+          ...mediaItem,
+           url, // Add the imageUrl field
+        };
+      }));
+      return {
+        ...post.toObject(),
+        media: mediaUrls, // Include the media with URLs in the response
+      };
+    }));
+   /* console.log('Posts with URLs:', imagesWithUrls);*/
+
+    res.status(200).json(imagesWithUrls);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

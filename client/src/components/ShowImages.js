@@ -65,11 +65,14 @@ const ShowImages = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
+
+    console.log(images)
     return (
         <div>
             <h1>Uploaded Images</h1>
             <div className="image-gallery">
                 {images.map((image) => (
+                    
                     <div key={image._id} className="image-item">
                         <img className="show-images-picture" src={image.imageUrl} alt={image.caption} />
                         <p>{image.caption}</p>

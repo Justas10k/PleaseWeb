@@ -12,6 +12,7 @@ import '../styles/Nav.css';
 import SearchInput from './SearchInput';
 import logo from '../img/shortlog.png';
 import ProfileDropdown from './ProfileDropDown';
+import ShowProfilePicture from './ShowProfilePicture'
 
 const Nav = () => {
   const navlinks = [
@@ -96,7 +97,7 @@ const Nav = () => {
             </li>
           ))}
           <div className="nav-item profile-item" ref={profileRef} onClick={toggleProfileMenu}>
-            <img className="profile-picture-mini" src={logo} alt="Profile" />
+          <ShowProfilePicture/>
             <a className='nav-link'>
               <span className="Me-arrow-container">
                 Me

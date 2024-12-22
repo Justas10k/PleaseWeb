@@ -71,17 +71,18 @@ const uploadImage = async (req, res) => {
     const fileBuffer = await sharp(file.buffer)
       .resize({ height: 1920, width: 1080, fit: "contain" })
       .toBuffer();
-
+ 
     await uploadFile(fileBuffer, imageName, file.mimetype);
 
     // Save image information in MongoDB
     const newImage = new Image({
+      
       userId, // Use the userId from the request body
       name: imageName,
       fileType: file.mimetype,
       imageUrl: `https://${bucketName}.s3.${region}.amazonaws.com/${imageName}`, // Construct the image URL
     });
-
+    
     await newImage.save();
 
     const newPost = new Post({
@@ -90,7 +91,6 @@ const uploadImage = async (req, res) => {
       imageName,
       caption,
     });
-
     await newPost.save();
 
     res.status(201).json({ message: 'Image uploaded successfully', post: newPost, image: newImage });
@@ -102,10 +102,14 @@ const uploadImage = async (req, res) => {
 
 // Updated function syntax for other functions
 const getImages = async (req, res) => {
+
   try {
     const images = await Image.find(); // Fetch all images from MongoDB
+    console.log("images :",images , "end")
     const imagesWithUrls = await Promise.all(images.map(async (image) => {
-      const url = await getObjectSignedUrl(image.name); // Generate signed URL for each image
+      console.log("before", image.name)
+      const url = await getObjectSignedUrl(image.name);
+     // Generate signed URL for each image
       return {
         ...image.toObject(),
         imageUrl: url, // Add the signed URL to the image object
@@ -309,29 +313,39 @@ const replaceVideo = async (req, res) => {
 
 // Updated function to upload profile picture
 const uploadProfilePicture = async (req, res) => {
-  const userId = req.body.userId; // Get userId from request body
-  const file = req.file; // Get the uploaded file
-  const profilePictureName = generateFileName(); // Generate a unique file name
-
   try {
+    const userId = req.body.userId; // Get userId from request body
+    const file = req.file; // Get the uploaded file
+    const profilePictureName = generateFileName(); // Generate a unique file name
+
     // Check if the file is provided
     if (!file) {
-      return res.status(400).json({ message: 'No profile picture uploaded' });
+      return res.status(400).json({ message: 'No profile picture file uploaded' });
     }
 
-    // Process the image (optional, similar to uploadImage)
+    // Find the existing user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // If the user already has a profile picture, delete it from S3
+    if (user.profilePicture) {
+      await deleteFile(user.profilePicture); // Delete the old profile picture from S3
+    }
+
+    // Process the new image
     const fileBuffer = await sharp(file.buffer)
       .resize({ height: 1920, width: 1080, fit: "contain" })
       .toBuffer();
 
-    // Upload profile picture to S3
+    // Upload the new profile picture to S3
     await uploadFile(fileBuffer, profilePictureName, file.mimetype);
 
-    // Update user's profile picture in MongoDB
-    const profilePictureUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${profilePictureName}`;
-    await User.findByIdAndUpdate(userId, { profilePicture: profilePictureUrl });
+    // Update the user's profile picture in MongoDB
+    await User.findByIdAndUpdate(userId, { profilePicture: profilePictureName }, { new: true });
 
-    res.status(201).json({ message: 'Profile picture uploaded successfully', profilePicture: profilePictureUrl });
+    res.status(201).json({ message: 'Profile picture uploaded successfully', profilePictureName });
   } catch (error) {
     console.error('Error uploading profile picture:', error);
     res.status(500).json({ message: 'Error uploading profile picture' });
@@ -350,7 +364,7 @@ const getProfilePicture = async (req, res) => {
 
     // Check if the user has a profile picture
     if (!user.profilePicture) {
-      return res.status(404).json({ message: 'Profile picture not found' });
+      return res.status(202).json({ message: 'Default' });
     }
 
     // Generate signed URL for the profile picture
@@ -371,8 +385,8 @@ module.exports = {
   deleteVideo,
   replaceImage,
   replaceVideo,
-  uploadProfilePicture, // Export the new function
-  getProfilePicture, // Export the new function
+  uploadProfilePicture,
+  getProfilePicture,
 };
 
 
